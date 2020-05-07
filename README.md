@@ -1,20 +1,20 @@
-# Fortory
+# Forgery
 
-Fortory is a slim though extensible test data generator in Elixir.
+Forgery is a slim though extensible test data generator in Elixir.
 
 ## Installation
 
 ```elixir
 def deps() do
-  [{:fortory, "~> 0.1"}]
+  [{:forgery, "~> 0.1"}]
 end
 ```
 
 ## Overview
 
-Full documentation can be found at [https://hexdocs.pm/fortory](https://hexdocs.pm/fortory).
+Full documentation can be found at [https://hexdocs.pm/forgery](https://hexdocs.pm/forgery).
 
-Fortory provides only a few simple APIs to work with:
+Forgery provides only a few simple APIs to work with:
 
 ```elixir
 defmodule MyUser do
@@ -22,7 +22,7 @@ defmodule MyUser do
 end
 
 defmodule MyFactory do
-  use Fortory
+  use Forgery
 
   def make(:user, fields) do
     fields
@@ -42,7 +42,7 @@ And just as simple as that!
 
 ## Ecto integration
 
-Fortory was built with easy Ecto integration in mind, though not limiting to it.
+Forgery was built with easy Ecto integration in mind, though not limiting to it.
 
 For example you use Ecto and have `MyRepo`. You can add a function, says `insert!` and `insert_many!`, into the factory:
 

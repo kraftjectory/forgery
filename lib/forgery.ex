@@ -1,8 +1,8 @@
-defmodule Fortory do
+defmodule Forgery do
   @moduledoc """
-  Fortory is a slim though extensible test data generator in Elixir.
+  Forgery is a slim though extensible test data generator in Elixir.
 
-  Fortory provides a few simple APIs to work with. To get started, you
+  Forgery provides a few simple APIs to work with. To get started, you
   need to implement the `make/2` callback:
 
       defmodule MyUser do
@@ -10,7 +10,7 @@ defmodule Fortory do
       end
 
       defmodule MyFactory do
-        use Fortory
+        use Forgery
 
         def make(:user, fields) do
           fields
@@ -30,7 +30,7 @@ defmodule Fortory do
 
   ## Ecto integration
 
-  Fortory was built with easy Ecto integration in mind, though not limiting to it.
+  Forgery was built with easy Ecto integration in mind, though not limiting to it.
 
   For example if you use Ecto and have `MyRepo`. You can add a function, says `insert!`, into the factory:
 
@@ -90,9 +90,9 @@ defmodule Fortory do
 
   defmacro __using__(_) do
     quote location: :keep do
-      import Fortory
+      import Forgery
 
-      @behaviour Fortory
+      @behaviour Forgery
 
       def make(factory, fields \\ %{})
 
@@ -105,7 +105,7 @@ defmodule Fortory do
   @doc """
   Lazily evaluate and put `lazy_value` into `name` if `name` does not exist in `fields`.
 
-      iex> import Fortory
+      iex> import Forgery
       iex>
       iex> fields = %{foo: 1}
       iex> put_new_field(fields, :foo, 100 + 2)
@@ -116,7 +116,7 @@ defmodule Fortory do
   Note that `lazy_value` is only evaluated when it is needed. For instance, in the
   following example, `make_foo.()` will not be invoked.
 
-      iex> import Fortory
+      iex> import Forgery
       iex>
       iex> make_foo = fn -> raise("I am invoked") end
       iex> fields = %{foo: 1}
@@ -136,7 +136,7 @@ defmodule Fortory do
   @doc """
   Create struct of `module` from `fields`.
 
-      iex> import Fortory
+      iex> import Forgery
       iex>
       iex> create_struct(%{id: 1, username: "john", password: "123456"}, MyUser)
       %MyUser{id: 1, password: "123456", username: "john"}

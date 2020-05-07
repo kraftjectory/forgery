@@ -1,12 +1,12 @@
-defmodule Fortory.MixProject do
+defmodule Forgery.MixProject do
   use Mix.Project
 
   @version "0.1.0"
-  @source_url "https://github.com/craftjectory/fortory"
+  @source_url "https://github.com/craftjectory/forgery"
 
   def project() do
     [
-      app: :fortory,
+      app: :forgery,
       version: @version,
       elixir: "~> 1.6",
       deps: deps(),
@@ -16,7 +16,7 @@ defmodule Fortory.MixProject do
       description: description(),
 
       # Docs.
-      name: "Fortory",
+      name: "Forgery",
       docs: docs()
     ]
   end
@@ -43,7 +43,7 @@ defmodule Fortory.MixProject do
 
   defp docs() do
     [
-      main: "Fortory",
+      main: "Forgery",
       extras: ["README.md"],
       source_ref: "v#{@version}",
       source_url: @source_url

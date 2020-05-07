@@ -3,7 +3,7 @@ defmodule MyUser do
 end
 
 defmodule MyFactory do
-  use Fortory
+  use Forgery
 
   def make(:user, fields) do
     fields

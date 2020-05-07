@@ -1,14 +1,14 @@
-defmodule FortoryTest do
+defmodule ForgeryTest do
   use ExUnit.Case, async: true
 
-  doctest Fortory
+  doctest Forgery
 
   defmodule User do
     defstruct [:id, :username, :password]
   end
 
   defmodule DummyFactory do
-    use Fortory
+    use Forgery
 
     def make(:user, fields) do
       id = make_unique_integer()
