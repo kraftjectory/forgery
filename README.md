@@ -29,7 +29,8 @@ defmodule MyFactory do
     |> put_new_field(:id, make_unique_integer())
     |> put_new_field(:username, "user" <> to_string(make_unique_integer()))
     |> create_struct(MyUser)
-  end end
+  end
+end
 
 iex> import MyFactory
 iex>
