@@ -35,14 +35,14 @@ defmodule Forgery do
   For example if you use Ecto and have `MyRepo`. You can add a function, says `insert!`, into the factory:
 
       defmodule MyFactory do
-        def insert!(factory, fields \\ %{}) do
-          :user
+        def insert!(factory_name, fields \\ %{}) do
+          factory_name
           |> make(fields)
           |> MyRepo.insert!()
         end
 
-        def insert_many!(factory, amount, fields \\ %{}) when amount >= 1 do
-          [%schema{} | _] = entities = make_many(:user, amount, fields)
+        def insert_many!(factory_name, amount, fields \\ %{}) when amount >= 1 do
+          [%schema{} | _] = entities = make_many(factory_name, amount, fields)
 
           {_, persisted_entities} = MyRepo.insert_all(schema, entities, returning: true)
 
@@ -55,24 +55,22 @@ defmodule Forgery do
 
   """
 
-  @type factory() :: atom()
+  @type factory_name() :: atom()
 
   @doc """
   Makes data from the given factory.
 
   The implementation of this callback should take in the factory name, as well and `fields`.
-
-
   """
 
-  @callback make(factory :: factory(), fields :: Enumerable.t()) :: any()
+  @callback make(factory_name(), fields :: Enumerable.t()) :: any()
 
   @doc """
   Make multiple data from the given factory.
 
   This function is roughly equivalent to:
 
-      Enum.map(1..amount, fn _ -> make(factory) end)
+      Enum.map(1..amount, fn _ -> make(factory_name) end)
 
   ### Example
 
@@ -83,9 +81,8 @@ defmodule Forgery do
         %MyUser{id: 7, password: nil, username: "user5"},
       ]
 
-
   """
-  @callback make_many(factory :: factory(), amount :: integer(), fields :: Enumerable.t()) ::
+  @callback make_many(factory_name(), amount :: integer(), fields :: Enumerable.t()) ::
               list(any())
 
   defmacro __using__(_) do
@@ -94,10 +91,10 @@ defmodule Forgery do
 
       @behaviour Forgery
 
-      def make(factory, fields \\ %{})
+      def make(factory_name, fields \\ %{})
 
-      def make_many(factory, amount, fields \\ %{}) when is_integer(amount) do
-        for _ <- 1..amount, do: make(factory, fields)
+      def make_many(factory_name, amount, fields \\ %{}) when is_integer(amount) do
+        for _ <- 1..amount, do: make(factory_name, fields)
       end
     end
   end
@@ -122,6 +119,7 @@ defmodule Forgery do
       iex> fields = %{foo: 1}
       iex> put_new_field(fields, :foo, make_foo.())
       %{foo: 1}
+
   """
 
   @spec put_new_field(fields :: Enumerable.t(), name :: any(), lazy_value :: any()) :: map()
@@ -135,6 +133,8 @@ defmodule Forgery do
 
   @doc """
   Create struct of `module` from `fields`.
+
+  See `Kernel.struct!/2` for more information.
 
       iex> import Forgery
       iex>

@@ -49,14 +49,14 @@ For example you use Ecto and have `MyRepo`. You can add a function, says `insert
 
 ```elixir
 defmodule MyFactory do
-  def insert!(factory, fields \\ %{}) do
-    :user
+  def insert!(factory_name, fields \\ %{}) do
+    factory_name
     |> make(fields)
     |> MyRepo.insert!()
   end
 
-  def insert_many!(factory, amount, fields \\ %{}) when amount >= 1 do
-    [%schema{} | _] = entities = make_many(:user, amount, fields)
+  def insert_many!(factory_name, amount, fields \\ %{}) when amount >= 1 do
+    [%schema{} | _] = entities = make_many(factory_name, amount, fields)
 
     {^amount, persisted_entities} = MyRepo.insert_all(schema, entities, returning: true)
 
