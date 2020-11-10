@@ -154,7 +154,7 @@ defmodule Forgery do
 
   """
 
-  @spec create_struct(fields :: Enumerable.t(), module()) :: struct()
+  @spec create_struct(fields :: Enumerable.t(), module() | struct()) :: struct()
   def create_struct(fields, module) do
     struct!(module, fields)
   end
