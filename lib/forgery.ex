@@ -5,8 +5,8 @@ defmodule Forgery do
   Forgery provides a few simple APIs to work with. To get started, you
   need to implement the `make/2` callback:
 
-      defmodule MyUser do
-        defstruct [:id, :username, :password]
+      defmodule User do
+        defstruct [:id, :name, :password]
       end
 
       defmodule MyFactory do
@@ -15,16 +15,16 @@ defmodule Forgery do
         def make(:user, fields) do
           fields
           |> put_new_field(:id, make_unique_integer())
-          |> put_new_field(:username, "user" <> to_string(make_unique_integer()))
-          |> create_struct(MyUser)
+          |> put_new_field(:name, "user" <> to_string(make_unique_integer()))
+          |> create_struct(User)
         end
       end
 
       iex> import MyFactory
       iex>
-      iex> %MyUser{} = make(:user)
-      iex> %MyUser{id: 42} = make(:user, id: 42)
-      iex> [%MyUser{}, %MyUser{}] = make_many(:user, 2)
+      iex> %User{} = make(:user)
+      iex> %User{id: 42} = make(:user, id: 42)
+      iex> [%User{}, %User{}] = make_many(:user, 2)
 
   And just as simple as that!
 
@@ -76,9 +76,9 @@ defmodule Forgery do
 
       make_many(:users, 3)
       [
-        %MyUser{id: 3, password: nil, username: "user3"},
-        %MyUser{id: 5, password: nil, username: "user4"},
-        %MyUser{id: 7, password: nil, username: "user5"},
+        %User{id: 3, password: nil, name: "user3"},
+        %User{id: 5, password: nil, name: "user4"},
+        %User{id: 7, password: nil, name: "user5"}
       ]
 
   """
@@ -138,8 +138,8 @@ defmodule Forgery do
 
       iex> import Forgery
       iex>
-      iex> create_struct(%{id: 1, username: "john", password: "123456"}, MyUser)
-      %MyUser{id: 1, password: "123456", username: "john"}
+      iex> create_struct(%{id: 1, name: "john", password: "123456"}, User)
+      %User{id: 1, password: "123456", name: "john"}
 
   """
 

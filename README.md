@@ -20,8 +20,8 @@ Full documentation can be found at [https://hexdocs.pm/forgery](https://hexdocs.
 Forgery provides only a few simple APIs to work with:
 
 ```elixir
-defmodule MyUser do
-  defstruct [:id, :username, :password]
+defmodule User do
+  defstruct [:id, :name, :password]
 end
 
 defmodule MyFactory do
@@ -30,16 +30,16 @@ defmodule MyFactory do
   def make(:user, fields) do
     fields
     |> put_new_field(:id, make_unique_integer())
-    |> put_new_field(:username, "user" <> to_string(make_unique_integer()))
-    |> create_struct(MyUser)
+    |> put_new_field(:name, "user" <> to_string(make_unique_integer()))
+    |> create_struct(User)
   end
 end
 
 iex> import MyFactory
 iex>
-iex> %MyUser{} = make(:user)
-iex> %MyUser{id: 42} = make(:user, id: 42)
-iex> [%MyUser{}, %MyUser{}] = make_many(:user, 2)
+iex> %User{} = make(:user)
+iex> %User{id: 42} = make(:user, id: 42)
+iex> [%User{}, %User{}] = make_many(:user, 2)
 ```
 
 And just as simple as that!
