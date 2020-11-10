@@ -9,13 +9,10 @@ defmodule ForgeryTest do
     use Forgery
 
     def make(:user, fields) do
-      id = make_unique_integer()
-      make_foo = fn -> raise("unexpected") end
-
       fields
-      |> put_new_field(:id, id)
-      |> put_new_field(:name, "user##{id}")
-      |> put_new_field(:name, make_foo.())
+      |> put_new_field(:id, lazy(make_unique_integer()))
+      |> put_new_field(:name, &("user#" <> Integer.to_string(&1.id)))
+      |> put_new_field(:name, fn _ -> raise("unexpected") end)
       |> create_struct(User)
     end
   end
@@ -34,7 +31,7 @@ defmodule ForgeryTest do
 
     assert %User{
              id: 100,
-             name: "user" <> _
+             name: "user#100"
            } = MyFactory.make(:user, id: 100)
 
     assert %User{name: "John"} = MyFactory.make(:user, name: "John")
