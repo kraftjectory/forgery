@@ -102,8 +102,6 @@ defmodule Forgery do
   @doc """
   Lazily evaluate and put `lazy_value` into `name` if `name` does not exist in `fields`.
 
-      iex> import Forgery
-      iex>
       iex> fields = %{foo: 1}
       iex> put_new_field(fields, :foo, 100 + 2)
       %{foo: 1}
@@ -113,8 +111,6 @@ defmodule Forgery do
   Note that `lazy_value` is only evaluated when it is needed. For instance, in the
   following example, `make_foo.()` will not be invoked.
 
-      iex> import Forgery
-      iex>
       iex> make_foo = fn -> raise("I am invoked") end
       iex> fields = %{foo: 1}
       iex> put_new_field(fields, :foo, make_foo.())
@@ -136,8 +132,6 @@ defmodule Forgery do
 
   See `Kernel.struct!/2` for more information.
 
-      iex> import Forgery
-      iex>
       iex> create_struct(%{id: 1, name: "john", password: "123456"}, User)
       %User{id: 1, password: "123456", name: "john"}
 

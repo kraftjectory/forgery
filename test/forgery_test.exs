@@ -20,7 +20,7 @@ defmodule ForgeryTest do
     end
   end
 
-  doctest Forgery
+  doctest Forgery, import: true
 
   test "make/1 and make/2" do
     assert %User{
