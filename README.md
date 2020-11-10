@@ -1,5 +1,8 @@
 # Forgery
 
+![CI Status](https://github.com/kraftjectory/forgery/workflows/CI/badge.svg)
+[![Hex Version](https://img.shields.io/hexpm/v/forgery.svg)](https://hex.pm/packages/forgery)
+
 Forgery is a slim though extensible test data generator in Elixir.
 
 ## Installation
