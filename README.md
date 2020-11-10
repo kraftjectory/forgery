@@ -3,7 +3,7 @@
 ![CI Status](https://github.com/kraftjectory/forgery/workflows/CI/badge.svg)
 [![Hex Version](https://img.shields.io/hexpm/v/forgery.svg)](https://hex.pm/packages/forgery)
 
-Forgery is a slim though extensible test data generator in Elixir.
+Forgery is a slim yet extensible data generator in Elixir.
 
 ## Installation
 
@@ -17,7 +17,7 @@ end
 
 Full documentation can be found at [https://hexdocs.pm/forgery](https://hexdocs.pm/forgery).
 
-Forgery provides only a few simple APIs to work with:
+Forgery provides a few simple APIs to work with:
 
 ```elixir
 defmodule User do
@@ -29,8 +29,8 @@ defmodule MyFactory do
 
   def make(:user, fields) do
     fields
-    |> put_new_field(:id, make_unique_integer())
-    |> put_new_field(:name, "user" <> to_string(make_unique_integer()))
+    |> put_new_field(:id, lazy(make_unique_integer()))
+    |> put_new_field(:name, &("user#" <> Integer.to_string(&1.id)))
     |> create_struct(User)
   end
 end
@@ -38,7 +38,7 @@ end
 iex> import MyFactory
 iex>
 iex> %User{} = make(:user)
-iex> %User{id: 42} = make(:user, id: 42)
+iex> %User{id: 42, name: "user#42"} = make(:user, id: 42)
 iex> [%User{}, %User{}] = make_many(:user, 2)
 ```
 

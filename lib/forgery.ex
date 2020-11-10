@@ -1,6 +1,6 @@
 defmodule Forgery do
   @moduledoc """
-  Forgery is a slim though extensible test data generator in Elixir.
+  Forgery is a slim yet extensible data generator in Elixir.
 
   Forgery provides a few simple APIs to work with. To get started, you
   need to implement the `make/2` callback:
@@ -14,8 +14,8 @@ defmodule Forgery do
 
         def make(:user, fields) do
           fields
-          |> put_new_field(:id, make_unique_integer())
-          |> put_new_field(:name, "user" <> to_string(make_unique_integer()))
+          |> put_new_field(:id, lazy(make_unique_integer()))
+          |> put_new_field(:name, &("user#" <> Integer.to_string(&1.id)))
           |> create_struct(User)
         end
       end
@@ -23,7 +23,7 @@ defmodule Forgery do
       iex> import MyFactory
       iex>
       iex> %User{} = make(:user)
-      iex> %User{id: 42} = make(:user, id: 42)
+      iex> %User{id: 42, name: "user#42"} = make(:user, id: 42)
       iex> [%User{}, %User{}] = make_many(:user, 2)
 
   And just as simple as that!
@@ -76,9 +76,9 @@ defmodule Forgery do
 
       make_many(:users, 3)
       [
-        %User{id: 3, password: nil, name: "user3"},
-        %User{id: 5, password: nil, name: "user4"},
-        %User{id: 7, password: nil, name: "user5"}
+        %User{id: 3, password: nil, name: "user#3"},
+        %User{id: 5, password: nil, name: "user#5"},
+        %User{id: 7, password: nil, name: "user#7"}
       ]
 
   """
@@ -100,30 +100,47 @@ defmodule Forgery do
   end
 
   @doc """
-  Lazily evaluate and put `lazy_value` into `name` if `name` does not exist in `fields`.
+  Lazily evaluates `value_setter` and puts the result into `key` if it does not exist in `fields`.
 
+  The `value_setter` function receives `fields` as an argument.
+
+      iex> make_foo = fn _ -> raise("I am invoked") end
       iex> fields = %{foo: 1}
-      iex> put_new_field(fields, :foo, 100 + 2)
+      iex> put_new_field(fields, :foo, make_foo)
       %{foo: 1}
-      iex> put_new_field(fields, :bar, 100)
-      %{foo: 1, bar: 100}
+      iex> put_new_field(fields, :bar, &(&1.foo + 100))
+      %{foo: 1, bar: 101}
 
-  Note that `lazy_value` is only evaluated when it is needed. For instance, in the
-  following example, `make_foo.()` will not be invoked.
+  There is also helper macro `lazy/1`:
 
-      iex> make_foo = fn -> raise("I am invoked") end
-      iex> fields = %{foo: 1}
-      iex> put_new_field(fields, :foo, make_foo.())
-      %{foo: 1}
+      iex> fields = %{foo: 2}
+      iex> put_new_field(fields, :foo, lazy(10 * 10))
+      %{foo: 2}
 
   """
+  @spec put_new_field(
+          fields :: Enumerable.t(),
+          key :: any(),
+          value_setter :: (fields :: map() -> any())
+        ) :: map()
+  def put_new_field(fields, key, value_setter) when is_function(value_setter, 1) do
+    case Map.new(fields) do
+      %{^key => _value} = fields ->
+        fields
 
-  @spec put_new_field(fields :: Enumerable.t(), name :: any(), lazy_value :: any()) :: map()
-  defmacro put_new_field(fields, name, lazy_value) do
+      fields ->
+        Map.put(fields, key, value_setter.(fields))
+    end
+  end
+
+  @doc """
+  Wraps the given `expr` into an anonymous function.
+
+  It is equivalent to `fn _ -> expr end`.
+  """
+  defmacro lazy(expr) do
     quote do
-      unquote(fields)
-      |> Map.new()
-      |> Map.put_new_lazy(unquote(name), fn -> unquote(lazy_value) end)
+      fn _ -> unquote(expr) end
     end
   end
 
@@ -132,12 +149,12 @@ defmodule Forgery do
 
   See `Kernel.struct!/2` for more information.
 
-      iex> create_struct(%{id: 1, name: "john", password: "123456"}, User)
-      %User{id: 1, password: "123456", name: "john"}
+      iex> create_struct(%{id: 1, name: "John", password: "123456"}, User)
+      %User{id: 1, password: "123456", name: "John"}
 
   """
 
-  @spec create_struct(fields :: Enumerable.t(), module :: atom()) :: struct()
+  @spec create_struct(fields :: Enumerable.t(), module() | struct()) :: struct()
   def create_struct(fields, module) do
     struct!(module, fields)
   end
