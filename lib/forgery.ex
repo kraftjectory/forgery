@@ -118,7 +118,11 @@ defmodule Forgery do
       %{foo: 2}
 
   """
-  @spec put_new_field(fields :: Enumerable.t(), key :: any(), value_setter :: ((fields :: map()) -> any())) :: map()
+  @spec put_new_field(
+          fields :: Enumerable.t(),
+          key :: any(),
+          value_setter :: (fields :: map() -> any())
+        ) :: map()
   def put_new_field(fields, key, value_setter) when is_function(value_setter, 1) do
     case Map.new(fields) do
       %{^key => _value} = fields ->
