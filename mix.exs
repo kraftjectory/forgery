@@ -1,7 +1,7 @@
 defmodule Forgery.MixProject do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.2.0"
   @source_url "https://github.com/craftjectory/forgery"
 
   def project() do
@@ -30,7 +30,7 @@ defmodule Forgery.MixProject do
   end
 
   defp description() do
-    "A slim test data generator that does not compromise extensibility"
+    "A slim test data generator that does not compromise extensibility."
   end
 
   defp package() do
@@ -44,9 +44,12 @@ defmodule Forgery.MixProject do
   defp docs() do
     [
       main: "Forgery",
-      extras: ["README.md"],
       source_ref: "v#{@version}",
-      source_url: @source_url
+      source_url: @source_url,
+      extras: [
+        "README.md",
+        "CHANGELOG.md"
+      ]
     ]
   end
 end
