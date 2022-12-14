@@ -94,7 +94,11 @@ defmodule Forgery do
       def make(factory_name, fields \\ %{})
 
       def make_many(factory_name, amount, fields \\ %{}) when is_integer(amount) do
-        for _ <- 1..amount, do: make(factory_name, fields)
+        if amount > 0 do
+          for _ <- 1..amount, do: make(factory_name, fields)
+        else
+          []
+        end
       end
     end
   end
