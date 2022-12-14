@@ -82,7 +82,7 @@ defmodule Forgery do
       ]
 
   """
-  @callback make_many(factory_name(), amount :: integer(), fields :: Enumerable.t()) ::
+  @callback make_many(factory_name(), amount :: non_neg_integer(), fields :: Enumerable.t()) ::
               list(any())
 
   defmacro __using__(_) do
@@ -93,12 +93,16 @@ defmodule Forgery do
 
       def make(factory_name, fields \\ %{})
 
-      def make_many(factory_name, amount, fields \\ %{}) when is_integer(amount) do
-        if amount > 0 do
-          for _ <- 1..amount, do: make(factory_name, fields)
-        else
-          []
-        end
+      def make_many(factory, amount, fields \\ %{})
+
+      def make_many(_factory, 0, _fields), do: []
+
+      def make_many(factory_name, amount, fields) when is_integer(amount) and amount > 0 do
+        for i <- 1..amount, do: make(factory_name, fields)
+      end
+
+      def make_many(_factory, _amount, _fields) do
+        raise ArgumentError, "argument error"
       end
     end
   end

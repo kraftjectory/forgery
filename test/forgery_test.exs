@@ -17,7 +17,7 @@ defmodule ForgeryTest do
     end
   end
 
-  doctest Forgery, import: true
+  # doctest Forgery, import: true
 
   test "make/1 and make/2" do
     assert %User{
@@ -50,7 +50,9 @@ defmodule ForgeryTest do
     assert [] == MyFactory.make_many(:user, 0, %{password: "123456"})
   end
 
-  test "make_many/2 with negative amount" do
-    assert [] == MyFactory.make_many(:user, -1, %{password: "123456"})
+  test "make_many/2 with negative amount should raise ArgumentError" do
+    assert_raise ArgumentError, "argument error", fn ->
+      MyFactory.make_many(:user, -1, %{password: "123456"})
+    end
   end
 end
