@@ -45,4 +45,16 @@ defmodule ForgeryTest do
     assert user1.password == "123456"
     assert user2.password == "123456"
   end
+
+  test "make_many/2 with zero amount" do
+    assert [] == MyFactory.make_many(:user, 0, %{password: "123456"})
+  end
+
+  test "make_many/2 with negative amount should not be called" do
+    assert_raise FunctionClauseError,
+                 "no function clause matching in ForgeryTest.MyFactory.make_many/3",
+                 fn ->
+                   MyFactory.make_many(:user, -1, %{password: "123456"})
+                 end
+  end
 end

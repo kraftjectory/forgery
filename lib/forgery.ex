@@ -72,6 +72,8 @@ defmodule Forgery do
 
       Enum.map(1..amount, fn _ -> make(factory_name) end)
 
+  with amount greater than zero.
+
   ### Example
 
       make_many(:users, 3)
@@ -82,7 +84,7 @@ defmodule Forgery do
       ]
 
   """
-  @callback make_many(factory_name(), amount :: integer(), fields :: Enumerable.t()) ::
+  @callback make_many(factory_name(), amount :: non_neg_integer(), fields :: Enumerable.t()) ::
               list(any())
 
   defmacro __using__(_) do
@@ -93,7 +95,11 @@ defmodule Forgery do
 
       def make(factory_name, fields \\ %{})
 
-      def make_many(factory_name, amount, fields \\ %{}) when is_integer(amount) do
+      def make_many(factory, amount, fields \\ %{})
+
+      def make_many(_factory, 0, _fields), do: []
+
+      def make_many(factory_name, amount, fields) when is_integer(amount) and amount > 0 do
         for _ <- 1..amount, do: make(factory_name, fields)
       end
     end
