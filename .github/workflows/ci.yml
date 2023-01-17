@@ -28,6 +28,8 @@ jobs:
         include:
           - otp: "24"
             elixir: "1.14"
+          - otp: "20"
+            elixir: "1.7"
 
     env:
       MIX_ENV: test
