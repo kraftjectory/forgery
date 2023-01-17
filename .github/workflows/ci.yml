@@ -8,29 +8,32 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install OTP and Elixir
         uses: erlef/setup-beam@v1
         with:
-          otp-version: '22.2'
-          elixir-version: '1.10'
+          otp-version: "24"
+          elixir-version: "1.14"
 
       - name: Check format
         run: mix format --check-formatted
 
   test:
-    name: Test suite OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+    name: Test suite
     runs-on: ubuntu-20.04
+
     strategy:
       matrix:
-        otp: ['22.3']
-        elixir: ['1.10']
+        include:
+          - otp: "24"
+            elixir: "1.14"
+
     env:
       MIX_ENV: test
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install OTP and Elixir
         uses: erlef/setup-beam@v1
