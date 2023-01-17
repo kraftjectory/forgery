@@ -44,7 +44,7 @@ jobs:
           elixir-version: ${{ matrix.elixir }}
 
       - name: Install dependencies
-        run: mix deps.get
+        run: mix deps.get --only test
 
       - name: Run tests
         run: mix test
