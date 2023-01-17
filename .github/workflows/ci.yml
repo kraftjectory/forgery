@@ -1,36 +1,51 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   format:
-    name: Code formatting
+    name: Code linting
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install OTP and Elixir
         uses: erlef/setup-beam@v1
         with:
-          otp-version: '22.2'
-          elixir-version: '1.10'
+          otp-version: "24"
+          elixir-version: "1.14"
 
-      - name: Check format
+      - name: Check for unused dependencies
+        run: mix deps.get && mix deps.unlock --check-unused
+
+      - name: Check formatting
         run: mix format --check-formatted
 
+      - name: Check for compilation warnings
+        run: mix compile --warnings-as-errors
+
   test:
-    name: Test suite OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+    name: Test suite
     runs-on: ubuntu-20.04
+
     strategy:
       matrix:
-        otp: ['22.3']
-        elixir: ['1.10']
+        include:
+          - otp: "24"
+            elixir: "1.14"
+          - otp: "20"
+            elixir: "1.7"
+
     env:
       MIX_ENV: test
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install OTP and Elixir
         uses: erlef/setup-beam@v1
@@ -39,7 +54,7 @@ jobs:
           elixir-version: ${{ matrix.elixir }}
 
       - name: Install dependencies
-        run: mix deps.get
+        run: mix deps.get --only test
 
       - name: Run tests
         run: mix test

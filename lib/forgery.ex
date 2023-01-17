@@ -23,8 +23,9 @@ defmodule Forgery do
       iex> import MyFactory
       iex>
       iex> %User{} = make(:user)
-      iex> %User{id: 42, name: "user#42"} = make(:user, id: 42)
       iex> [%User{}, %User{}] = make_many(:user, 2)
+      iex> make(:user, id: 42)
+      %User{id: 42, name: "user#42"}
 
   And just as simple as that!
 
