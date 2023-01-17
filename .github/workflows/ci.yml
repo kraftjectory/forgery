@@ -8,7 +8,7 @@ on:
 
 jobs:
   lint:
-    name: Run code linting
+    name: Lint
     uses: lexmag/elixir-actions/.github/workflows/lint.yml@v1
 
   test:
