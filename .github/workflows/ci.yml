@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   format:
-    name: Code formatting
+    name: Code linting
     runs-on: ubuntu-20.04
 
     steps:
@@ -16,8 +16,14 @@ jobs:
           otp-version: "24"
           elixir-version: "1.14"
 
-      - name: Check format
+      - name: Check for unused dependencies
+        run: mix deps.get && mix deps.unlock --check-unused
+
+      - name: Check formatting
         run: mix format --check-formatted
+
+      - name: Check for compilation warnings
+        run: mix compile --warnings-as-errors
 
   test:
     name: Test suite
